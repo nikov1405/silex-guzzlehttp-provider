@@ -11,7 +11,8 @@
 namespace SilexGuzzle;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\ServiceProviderInterface;
+use Pimple\Container;
 use GuzzleHttp\Client;
 
 /**
@@ -37,13 +38,13 @@ class GuzzleServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function register(Application $app)
+    public function register(Container $app)
     {
-        $app['guzzle'] = $app->share(function () use ($app) {
+        $app['guzzle'] = function () use ($app) {
 
             $this->setConfiguration($app);
             return new Client($this->configuration);
-        });
+        };
     }
 
     /** method to catch configuration params throw by $app['guzzle.*]
